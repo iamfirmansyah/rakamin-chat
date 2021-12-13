@@ -2,7 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\Response;
+use App\Helpers\SlackMessage;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -13,7 +19,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -38,7 +47,6 @@ class Handler extends ExceptionHandler
     {
         parent::report($exception);
     }
-
     /**
      * Render an exception into an HTTP response.
      *
@@ -50,6 +58,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        if ($exception instanceof NotFoundHttpException) {
+            return Response::send(404, NULL, "URL_NOT_FOUND");
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return Response::send(405);
+        }
+
+        if ($exception instanceof QueryException) {
+            return Response::send(500, null, $exception->getMessage());
+        }
+
+        if ($exception instanceof TooManyRequestsHttpException) {
+            return Response::send(429, null, 'TO_MANY_REQUEST');
+        }
+
+        if ($exception instanceof Throwable) {
+            return Response::send(500, null, $exception->getMessage());
+        }
+
+        return Response::send(500, null, $exception->getMessage());
     }
 }
