@@ -80,6 +80,7 @@ class ChatController extends Controller
     public function deleteChat($id)
     {
         $delete = ChatService::deleteChat($id);
+        $deleteMessage = ChatService::deleteMessageFromChat($id);
 
         return Response::send(204);
     }

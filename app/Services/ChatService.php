@@ -47,6 +47,11 @@ class ChatService
         $delete = ChatMessage::where('id', $id)->delete();
     }
 
+    public static function deleteMessageFromChat($id)
+    {
+        $delete = ChatMessage::where('chat_id', $id)->delete();
+    }
+
     public static function deleteChat($id)
     {
         $delete = Chat::where('id', $id)->delete();
