@@ -122,7 +122,7 @@ class AuthController extends Controller
         $user->fullname = $request->fullname ?? Auth::user()->fullname;
         $user->save();
 
-        return Response::send(200);
+        return Response::send(200, $user);
 
     }
 

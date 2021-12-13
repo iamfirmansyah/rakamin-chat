@@ -18,7 +18,7 @@ Route::namespace('Auth')->group(function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware('jwt.verify')->group(function () {
         Route::post('update-account', 'AuthController@updateAccount');
         Route::post('update-password', 'AuthController@updatePassword');
         Route::get('me', 'AuthController@getAuthenticatedUser');
