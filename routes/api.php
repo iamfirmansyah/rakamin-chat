@@ -24,3 +24,12 @@ Route::namespace('Auth')->group(function () {
         Route::get('me', 'AuthController@getAuthenticatedUser');
     });
 });
+
+
+Route::prefix('chats')->middleware('jwt.verify')->group(function(){
+    Route::get('/', 'ChatController@index');
+    Route::post('/', 'ChatController@create');
+    Route::get('/{chatID}', 'ChatController@detail');
+    Route::delete('chat/{chatID}', 'ChatController@deleteChat');
+    Route::delete('message/{chatID}', 'ChatController@deleteMessage');
+});
