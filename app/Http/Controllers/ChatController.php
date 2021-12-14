@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Chat;
 use App\ChatMessage;
 use App\Helpers\PaginatorFormatter;
+use App\Helpers\PublicIdUtil;
 use App\Helpers\Response;
 use App\Services\ChatService;
 use App\User;
@@ -51,6 +52,15 @@ class ChatController extends Controller
         $parseData->to      = $request->to;
         $parseData->from    = auth()->user()->id;
         $parseData->message = $request->message;
+
+        $file = $request->file('file');
+
+        if($file){
+            $uniqueID = PublicIdUtil::random(5);
+            $convertFile = ChatService::convertFile($uniqueID, $file, 'chat_'. $uniqueID);
+            $parseData->file = $convertFile;
+            $parseData->file_type = $file->getClientOriginalExtension();
+        }
 
         $chat = ChatService::doChat($parseData);
 

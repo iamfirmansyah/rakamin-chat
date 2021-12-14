@@ -56,4 +56,27 @@ class ChatService
     {
         $delete = Chat::where('id', $id)->delete();
     }
+
+    public static function convertFile($id, $file, $type)
+    {
+        if (null === $file) {
+            return null;
+        }
+
+        $path = env('CHAT_FOLDER') ?? 'public/attachment/';
+
+        $folder = base_path($path);
+
+        if (!file_exists($folder)) mkdir($folder);
+
+        $extension = $file->getClientOriginalExtension();
+        $filename = $type . '_' . sha1($id . "_" . date('YmdHis')) . "." . $extension;
+        $file->move($folder, $filename);
+
+        $folder = str_replace('public', '', env('CHAT_FOLDER'));
+
+        $url = (env('APP_URL') ?? 'url_not_found') .'/'. $folder . $filename;
+
+        return $url;
+    }
 }
