@@ -20,6 +20,14 @@ for A will shows A-C & A-D)
 5. Unit Test for Authentication
 
 ## Documentation
+- url documentation
+```bash
+  https://rakamin-documentation.herokuapp.com/
+```
+- repo documentation (node js)
+```bash
+  https://github.com/iamfirmansyah/rakamin-node-documentation
+```
 
 ## Installing Rakamin on local
 
